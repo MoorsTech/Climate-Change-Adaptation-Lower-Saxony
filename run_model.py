@@ -16,16 +16,7 @@ MODEL_F = "data/Uelzen.mdl"
 CLIMATE_DATA_P = "data/BiasCorrection"
 ADAPTATION_SPEED = "data/adaptation_speed.xlsx"
 TARGET_LENGTH = 1140
-"""
-TODO:
-- (Q) Average/Smooth or not?
-    - Try smoothing without using monthly values
-- can we figure out what pysd is doing when there's not enough data
-    - Having mismatched input/output array lengths
 
-TODO Rodrigo1:
-- Copy paste plot data from here to rodrigo1
-"""
 
 adap_df = pd.read_excel(ADAPTATION_SPEED)
 LOAD_CACHE = "--load-cache" in sys.argv
@@ -34,7 +25,6 @@ WRITE_CACHE = "--write-cache" in sys.argv
 NO_ADAPTATIONS = ["Pp", "ETP"]
 CASES = {
     # BAU case is used as the parameter base for all other cases
-    # "BAU": {"n": 0.71, "Kc": adap_df.kc1, "Artificial Recharge": 0, "CN": 85.7, "BAU": adap_df.BAU, "NetoNull": adap_df.NetoNull, "Condition": 0},
     "BAU": {
         "n": 0.71,
         "Kc": adap_df.kc1,
@@ -49,7 +39,6 @@ CASES = {
     "ARC": {"Artificial Recharge": adap_df["artificial recharge"]},  # half of grey water goes into aquifer
     "PIR": {"n": adap_df.n},
     "CRP": {"Kc": adap_df.kc2},
-    # "CRP+PIR+HUM": {"Kc": adap_df.kc2, "n": adap_df.n, "CN": adap_df.cn, "Correction": adap_df.correction},
 }
 
 Y_LABELS = {
@@ -94,13 +83,7 @@ region = "Seewinkel"
 
 def prep_data(f, extra_params):
     df = pd.read_excel(f)
-    # df["KC"] = df.Date.dt.month.apply(lambda x: KCS[kc].get(x, 0))
     extra_params = deepcopy(extra_params)
-    # if "CN_target" in extra_params:
-    #     cn_target = extra_params.pop("CN_target")
-    #     base_cn = extra_params.pop("CN")
-    #     monthly_change = (base_cn - cn_target) / TARGET_LENGTH
-    #     extra_params["CN"] = pd.Series([base_cn - monthly_change * (i + 1) for i in df.index])
     return df, extra_params
 
 
@@ -110,7 +93,6 @@ def run_sim(rcp, var, run_name, **extra_params):
     output_data = []
     output_index = None
     for data_dir in _files:
-        # data_file = os.path.join(rcp_data_d, data_dir, "dr_reshape.xlsx")
         data_file = os.path.join(CLIMATE_DATA_P, data_dir, f"{rcp}biascorrected.xlsx")
         if not os.path.exists(data_file):
             continue
@@ -131,8 +113,6 @@ def run_sim(rcp, var, run_name, **extra_params):
         params = {"Pp": i_data["Pp"], "ETP": i_data["ETr"]}
         if extra_params:
             params.update(extra_params)
-        # _df = pd.DataFrame(params)
-        # _df.to_excel(f"input_params/{run_name}_{data_dir.replace('/','_')}.xlsx")
         data = MODEL.run(params=params, return_columns=[var])
         data = data.iloc[len(data) - len(output_index) :]
         data = data.rename({var: data_dir}, axis=1)

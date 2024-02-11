@@ -39,9 +39,7 @@ def filter_date(df):
 
 
 def plot_data_simple(df, cases, name, show=False, y_label="value", y_scale=None):
-    # df = df[[n for n in df.columns if n.endswith("_mean") or n == "Year"]]
     fig = go.Figure()
-    # df = df.rolling(ROLLING_MEAN_TICKS, on="Date").mean()
     df = filter_date(df)
     for case in cases:
         fig_ = go.Scatter(x=df.Date, y=df[f"{case}"], line=LINE_CONF[case], name=case)
