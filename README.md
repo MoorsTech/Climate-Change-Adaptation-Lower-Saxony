@@ -4,9 +4,9 @@
 ## Introduction
 
 ## Whats contained in this repository
-- `data` contains all the inputs used to run the model and generate the plots.
+- `data` contains all the inputs used to run the model and to generate the plots.
 - `data/adaptation_speed.xlsx` in particular contains tweakable parameters that allow the configuration of adaptation measures.
-- `run_model` the main module that runs the model parameters and and generates the plots
+- `run_model` the main module that runs the model parameters
 
 ## How to run the models
 
