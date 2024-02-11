@@ -10,7 +10,7 @@
 ## How to run the models
 
 ### Setup
-The environment can be setup using pip or pipenv. Make sure your environment is using python 3.9. This application and its dependancies were not tested for any other python version.
+The environment can be setup using either pip or pipenv. Make sure your environment is using python 3.9. This application and its dependancies were not tested for any other python version.
 
 pip: `pip install -r requirements.txt`
 
